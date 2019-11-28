@@ -137,11 +137,10 @@ main = do
   args <- getArgs
   if length args == 2 then do
     let [player, gameId] = args
-    _ <- if (args !! 1) == "A" then do
+    _ <- if player == "A" then do
       firstMove <- makeFirstMove
       _ <- sendMessage firstMove player gameId
-      _ <- step player gameId
-      return $ ()
+      step player gameId
     else do
       step player gameId
     return $ ()
