@@ -118,6 +118,7 @@ step player gameId = do
   movesStr <- makeAMove point contents
   score <- getScoreFromJson contents
   putStrLn $ "Made a move to " ++ showPointStr (showPoint point) ++ " and score is " ++ show score
+  sendMessage movesStr player gameId
   step player gameId
 
 {-battleship :: String -> String -> IO ()
