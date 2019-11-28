@@ -117,9 +117,15 @@ step player gameId = do
   point <- randomNextMove moves
   movesStr <- makeAMove point contents
   score <- getScoreFromJson contents
-  putStrLn $ "Made a move to " ++ showPointStr (showPoint point) ++ " and score is " ++ show score
-  sendMessage movesStr player gameId
-  step player gameId
+  let (myScore, enemyScore) = score
+  if (myScore == 20) then do
+    putStrLn("Game Over")
+    sendMessage movesStr player gameId
+    return $ ()
+  else do
+    putStrLn $ "Made a move to " ++ showPointStr (showPoint point) ++ " and score is " ++ show score
+    sendMessage movesStr player gameId
+    step player gameId
 
 {-battleship :: String -> String -> IO ()
 battleship player gameId = do
