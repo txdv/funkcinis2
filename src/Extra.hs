@@ -1,4 +1,4 @@
-
+module Extra where
 {-makeAMove:: [Point] -> Move -> Either String (Maybe [String])
 makeAMove _ (NotMove e) = Right Nothing
 makeAMove (coord:rest) allMoves = if 
@@ -27,7 +27,6 @@ getFinalMoves  json = do
         Right Nothing -> Left "error"
         Right (Just correctMove) -> Right (showFinalMoves (addMove correctMove (getOponentsResult moves) moves))-}   
 
-        
 {-getPlayerStatus acc (MovePrev  _ _ move) = getPlayerStatus' acc move
 getPlayerStatus acc (MoveFirst _) = acc
 getPlayerStatus acc (NotMove e) = acc

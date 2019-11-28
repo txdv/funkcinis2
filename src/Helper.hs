@@ -1,12 +1,6 @@
 module Helper where
 
 data Player = PlayerA | PlayerB deriving (Eq)
-data Game = Game {
-  player :: Player,
-  gameId :: String,
-  --map :: Map,
-  step :: Int
-}
 
 instance Show Player where
   show PlayerA = "A"
@@ -30,7 +24,7 @@ instance Show Status where
 data JValue = JString String | JList [JValue]
   deriving Show
 
-data Move = MoveFirst Point | MovePrev Point Status Move | MoveWithStatus Point Status | NotMove String
+data Move = MoveFirst Point | MovePrev Point Status Move | MoveWithStatus Point Status | NotMove
   deriving Show
 
 listOfCoordX = [1..10]

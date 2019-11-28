@@ -90,7 +90,7 @@ getFirstMove a =
     
 listMoves acc (MovePrev  _ _ move) = listMoves' acc move
 listMoves acc (MoveFirst _) = acc
-listMoves acc (NotMove e) = []
+listMoves acc NotMove = []
 listMoves' acc (MovePrev xy status move) = listMoves (acc ++ [MoveWithStatus xy status]) move
 listMoves' acc (MoveFirst xy) = acc ++ [MoveFirst xy]
 
