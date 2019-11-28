@@ -119,8 +119,8 @@ step player gameId = do
   putStrLn $ "Made a move to " ++ showPointStr (showPoint point) ++ " and score is " ++ show score 
   step player gameId
   
-main :: String -> String -> IO ()
-main player gameId = do
+{-battleship :: String -> String -> IO ()
+battleship player gameId = do
   --(responseCode, contents) <- getMessage player gameId
   if(player == "A")
     then do
@@ -129,17 +129,19 @@ main player gameId = do
       step player gameId
       return $ ()
     else do
-      step player gameId
+      step player gameId-}
 
-{--main :: IO ()
+main :: IO ()
 main = do
-  contents <- readFile "moves.txt"
-  --result <- makeARandomMove contents
-  movesStr <-  makeARandomMove contents
-  --moves <- liftEither pure $ parseMoves movesStr
-  --result <- liftEither pure $ getScore moves
-  print $ movesStr
-  --print $ parseMoves contents
-  --print $ getOponentsResult $ parseMoves contents
-  --print $ getPointResult contents--}
-
+  args <- getArgs
+  if length args == 2 
+    then do
+      let [player, gameId] = args
+      _ <- if (args !! 1) == "A" 
+        then do
+          firstMove <- makeFirstMove
+          _ <- sendMessage firstMove player gameId
+          step player gameId
+          return $ ()
+            else do
+            step player gameId

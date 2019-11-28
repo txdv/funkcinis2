@@ -33,6 +33,16 @@ getPlayerStatus acc (NotMove e) = acc
 getPlayerStatus' acc (MovePrev xy status move) = getPlayerStatus (acc ++ [status]) move
 getPlayerStatus' acc (MoveFirst xy) = acc-}
 
+--contents <- readFile "moves.txt"
+--result <- makeARandomMove contents
+--movesStr <-  makeARandomMove contents
+--moves <- liftEither pure $ parseMoves movesStr
+--result <- liftEither pure $ getScore moves
+--print $ movesStr
+--print $ parseMoves contents
+--print $ getOponentsResult $ parseMoves contents
+--print $ getPointResult contents
+
 
 {--runGame:: Player -> String -> IO ()
 runGame player gameId = runGameStep game
