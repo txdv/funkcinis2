@@ -24,6 +24,7 @@ dependencies:
 - random-shuffle
 - http-conduit
 - case-insensitive
+- bytestring
 
 library:
   source-dirs: src

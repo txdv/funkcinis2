@@ -1,19 +1,20 @@
 module Game where
-  
+
 import Parser
 import Helper
 import Encode
 import Remote
+import System.Environment
 import System.Random.Shuffle
 
 getMovePoint:: [Point] -> Move -> Either String (Maybe Point)
 getMovePoint _ NotMove = Right Nothing
-getMovePoint (coord:rest) allMoves = if 
-  (checkIfMoveExists (show (MoveFirst coord)) (map show (listMoves [] allMoves))) then (getMovePoint rest allMoves) else (Right (Just coord)) 
+getMovePoint (coord:rest) allMoves = if
+  (checkIfMoveExists (show (MoveFirst coord)) (map show (listMoves [] allMoves))) then (getMovePoint rest allMoves) else (Right (Just coord))
 getMovePoint_ _ = Right Nothing
 
 checkIfMoveExists move list = move `elem` list
-checkIfOponentHit point list = point `elem` list 
+checkIfOponentHit point list = point `elem` list
 
 getOponentsResult:: Move -> Status
 getOponentsResult moves =
@@ -23,13 +24,13 @@ getOponentsResult moves =
 
 getPointResult :: String -> Either String Status
 getPointResult [] = Left "getting result failed"
-getPointResult json = do 
+getPointResult json = do
   (list, _) <- parseJList json
   maybeMoves <- getAllMoves list
   case maybeMoves of
     Nothing -> Left "getting result failed"
-    (Just moves) -> 
-        Right (getOponentsResult moves) 
+    (Just moves) ->
+        Right (getOponentsResult moves)
 
 addMove:: Point -> Status -> Move -> Move
 addMove point status allMoves = (MovePrev point status allMoves)
@@ -73,7 +74,7 @@ makeFirstMove  = do
   i <- randomCoordinates
   let coord = head i
   return $ "[\"coord\","++ showPointStr (showPoint coord) ++ "]"
-        
+
 makeAMove :: Point -> String -> IO String
 makeAMove point json = do
   (list, _) <- liftEither pure (parseJList json)
@@ -87,8 +88,8 @@ makeAMove point json = do
       else ( do
         --correctMove <- randomNextMove moves
         return (showFinalMoves (addMove point (getOponentsResult moves) moves)))
-  
-getScoreFromJson :: String -> IO (Int, Int)        
+
+getScoreFromJson :: String -> IO (Int, Int)
 getScoreFromJson json = do
   moves <- getMovesFromJson json
   scores <- liftEither pure (getScore moves)
@@ -97,7 +98,7 @@ getScoreFromJson json = do
 countHits acc (Hit:xs) = countHits (acc + 1) xs
 countHits acc (Miss:xs) = countHits acc xs
 countHits acc (Unknown:xs) = countHits acc xs
-countHits acc [] = acc 
+countHits acc [] = acc
 
 getScore :: Move -> Either String (Int, Int)
 getScore moves = do
@@ -108,17 +109,17 @@ getScore moves = do
   let hitsA = countHits 0 statsA
   let hitsB = countHits 0 statsB
   return (hitsA, hitsB)
-  
+
 step:: String -> String -> IO ()
 step player gameId = do
   (responseCode, contents) <- getMessage player gameId
   moves <- getMovesFromJson contents
   point <- randomNextMove moves
   movesStr <- makeAMove point contents
-  score <- getScoreFromJson contents 
-  putStrLn $ "Made a move to " ++ showPointStr (showPoint point) ++ " and score is " ++ show score 
+  score <- getScoreFromJson contents
+  putStrLn $ "Made a move to " ++ showPointStr (showPoint point) ++ " and score is " ++ show score
   step player gameId
-  
+
 {-battleship :: String -> String -> IO ()
 battleship player gameId = do
   --(responseCode, contents) <- getMessage player gameId
@@ -134,14 +135,15 @@ battleship player gameId = do
 main :: IO ()
 main = do
   args <- getArgs
-  if length args == 2 
-    then do
-      let [player, gameId] = args
-      _ <- if (args !! 1) == "A" 
-        then do
-          firstMove <- makeFirstMove
-          _ <- sendMessage firstMove player gameId
-          step player gameId
-          return $ ()
-            else do
-            step player gameId
+  if length args == 2 then do
+    let [player, gameId] = args
+    _ <- if (args !! 1) == "A" then do
+      firstMove <- makeFirstMove
+      _ <- sendMessage firstMove player gameId
+      _ <- step player gameId
+      return $ ()
+    else do
+      step player gameId
+    return $ ()
+  else do
+    putStrLn ("Yo")
